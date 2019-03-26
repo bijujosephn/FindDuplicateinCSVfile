@@ -44,7 +44,7 @@ namespace CSVFile_duplicated_rows
                 if (dataLine.Trim().Length == 0) {
                    throw new Exception("Data file starts with blank lines.");
                 } 
-                 //if (!validDataline(dataline)){}-- need to check the line wheused in productio
+                 //if (!validDataline(dataline)){}-- need to check the line when used in production
                 data = dataLine.Split(',');
                 dct1.Add(data[0], data[1]); // storing the first key value pair in both dictionaries
                 dct2.Add(data[1], data[0]);
@@ -74,7 +74,7 @@ namespace CSVFile_duplicated_rows
                     else
                     {
                         dct1.Add(data[0], data[1]);
-                        dct3[data[0]] = 1;  // when first time add counter is set to 1
+                        dct3[data[0]] = 1;  // when first time add , the  counter is set to 1
                     }
 
                     // if second column conatains a duplicate,check in the second dictionary
