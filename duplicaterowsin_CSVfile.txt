@@ -18,7 +18,7 @@ namespace CSVFile_duplicated_rows
 
             findDuplicate(@"c:\Biju_Joseph\testfile1.csv");    // commnd line arguments may be used
             // findDuplicate(@"c:\Biju_Joseph\testfile2.csv"); // or Read file path from the user 
-            // findDuplicate(@"c:\Biju_Joseph\testfile3.csv");
+            // findDuplicate(@"c:\Biju_Joseph\testfile3.csv");// or from Config
             Console.ReadLine();
         }
 
