@@ -1,0 +1,119 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace CSVFile_duplicated_rows
+{
+    // Given a comma-separated file and a column header write a method that will output all lines 
+    // in the file that contain duplicate values in that column.
+    
+    class Program   // coding : Biju Joseph,Redmond,WA
+    {
+        static void Main(string[] args)
+        {
+            // Find duplicate values in column1 or column2 of a 2 column CSV file  
+
+            findDuplicate(@"c:\Biju_Joseph\testfile1.csv");    // commnd line arguments may be used
+            // findDuplicate(@"c:\Biju_Joseph\testfile2.csv"); // or Read file path from the user 
+            // findDuplicate(@"c:\Biju_Joseph\testfile3.csv");
+            Console.ReadLine();
+        }
+
+        static void findDuplicate(string flname)
+        {
+            try
+            {
+                StreamReader sr = new StreamReader(flname);
+                string dataLine = null;
+                Dictionary<string, string> dct1 = new Dictionary<string, string>();
+                Dictionary<string, string> dct2 = new Dictionary<string, string>();
+
+                Dictionary<string, int> dct3 = new Dictionary<string, int>(); //to  keep track of count
+                Dictionary<string, int> dct4 = new Dictionary<string, int>();
+
+                List<string> lst1 = new List<string>(); // to add the column1 duplicate in O(n) 
+                List<string> lst2 = new List<string>(); //to add the column2 duplicate in O(n)
+
+                string[] data = null;
+                // dataLine = sr.ReadLine(); // if there is a header, uncommenting it will read the header
+                // and this dataline, can be processed for any other complex headers,
+                dataLine = sr.ReadLine();  // read the first line of data, assuming that there is no heder
+                if (dataLine.Trim().Length == 0) {
+                   throw new Exception("Data file starts with blank lines.");
+                } 
+                 //if (!validDataline(dataline)){}-- need to check the line wheused in productio
+                data = dataLine.Split(',');
+                dct1.Add(data[0], data[1]); // storing the first key value pair in both dictionaries
+                dct2.Add(data[1], data[0]);
+
+                int cnt = 1;
+                dct3.Add(data[0], cnt);
+                Console.WriteLine("Data from the CSV file\n");
+                Console.WriteLine(dataLine);
+                while ((dataLine = sr.ReadLine()) != null)  //readn line by line till end of file
+                {
+                  data = dataLine.Split(',');// get <key,val> data[0] and data[1]
+                    if (dataLine.Trim().Length == 0 || data.Length==0) continue; //if a blank line found
+                    Console.WriteLine(dataLine);
+                    string val1 = null, val2 = null;
+                  
+                  //if first column contains a duplicate
+                  if (dct1.ContainsKey(data[0]))
+                    {
+                        if (dct3[data[0]] == 1)  // to get the first entry of the duplicate 
+                        {
+                            dct1.TryGetValue(data[0], out val1);
+                            lst1.Add(data[0] + "," + val1);
+                        }
+                        lst1.Add(dataLine);
+                        dct3[data[0]]++;
+                    }
+                    else
+                    {
+                        dct1.Add(data[0], data[1]);
+                        dct3[data[0]] = 1;  // when first time add counter is set to 1
+                    }
+
+                    // if second column conatains a duplicate,check in the second dictionary
+                    if (dct2.ContainsKey(data[1]))
+                    {
+                        if (dct4[data[1]] == 1)  // to get the first entry of the duplicate 
+                        {
+                            dct2.TryGetValue(data[1], out val2);
+                            lst2.Add(val2 + "," + data[1]);
+                        }
+                        lst2.Add(dataLine);  // or print
+                        dct4[data[1]]++;
+                    }
+                    else
+                    {
+                        dct2.Add(data[1], data[0]);
+                        dct4[data[1]] = 1;  // when first time addded, counter is set to 1
+                    }
+                }
+
+                //printing the duplictaed list
+
+                Console.WriteLine("Column1 Duplicates\n");
+                foreach (var lst in lst1)
+                    Console.WriteLine(lst);
+
+                Console.WriteLine("Column2 Duplicates\n");
+                foreach (var lst in lst2)
+                    Console.WriteLine(lst);
+            }
+
+            catch (Exception E)
+            {
+                Console.Write(E.Message);
+                Console.Write("\n ** An error occured. Please check the data format or file path/name. **");
+                
+            }
+        }
+    }
+}
+
+
